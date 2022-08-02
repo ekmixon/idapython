@@ -386,16 +386,12 @@ class REobjc:
         based on the class of the first argument to the current function
         '''
         f_start = idc.get_func_attr(ea, idc.FUNCATTR_START)
-        
+
         tif = ida_typeinf.tinfo_t()
         idaapi.get_tinfo2(f_start, tif)
         funcdata = idaapi.func_type_data_t()
-        got_data = tif.get_func_details(funcdata)
-
-        # not happy about casting to a string and then regex replacing... but that's the best I could come up with
-        if got_data:
+        if got_data := tif.get_func_details(funcdata):
             replace_reg = re.compile(' \*', re.IGNORECASE)
-            objc_self_type = funcdata[0].type
-            return objc_self_type
+            return funcdata[0].type
         else:
             return None
